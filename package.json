@@ -1,0 +1,28 @@
+{
+    "name": "a-sdl-app-component",
+    "version": "2.0.4",
+    "description": "这是HUESDL团队APP常用组件封装库，仅供HUESDL内部使用",
+    "author": "Sure Zhang <Sure_W@outlook.com>",
+    "contributors": [
+        "ChenXi Zhang"
+    ],
+    "private": false,
+    "type": "module",
+    "main": "/dist/a-sdl-app-component",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^5.1.4",
+        "echarts": "^5.5.1",
+        "moment": "^2.30.1",
+        "vant": "^4.9.10",
+        "vite": "^5.4.10",
+        "vite-plugin-vue-devtools": "^7.5.4",
+        "vue": "^3.5.13"
+    },
+    "license": "ISC"
+}

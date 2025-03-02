@@ -1,0 +1,4 @@
+node_modules
+.vscode
+jsconfig.json
+vite.config.js
