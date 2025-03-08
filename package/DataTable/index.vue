@@ -95,21 +95,17 @@ const findValue = (head, table_data) => {
             value: "--",
         }));
     }
-    // 创建一个名称到对象的映射，便于快速查找第二组数据中的对象
     const table_dataMap = new Map();
     table_data.forEach((item) => {
         table_dataMap.set(item.key, item);
     });
 
-    // 创建一个新的数组用于存储合并后的数据
     const mergedDataset = [];
 
     head.forEach((item1) => {
         if (table_dataMap.has(item1.key)) {
-            // 如果第二组数据中存在同名对象，添加到新数组中
             mergedDataset.push(table_dataMap.get(item1.key));
         } else {
-            // 如果第二组数据中不存在同名对象，创建一个 value 为 "--" 的新对象并添加到新数组中
             mergedDataset.push({
                 key: item1.key,
                 value: "--",

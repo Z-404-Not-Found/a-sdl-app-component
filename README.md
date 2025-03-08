@@ -1,6 +1,10 @@
 # a-sdl-app-component
 
-HUESDL 团队移动端项目专属组件库，仅供团队内部使用，组件包括`<SdlCard>`、`<DataTags>`、`<DataTable>`、`<AsyncDataEcharts>`，以满足团队移动端部分需求，实现代码复用，其中`<AsyncDataEcharts>`用于生成动态异步生成多 y 轴且支持 y 轴复用 echarts，用法见`快速上手`。
+由 HUESDL 团队移动端项目孵化的组件库，组件包括`<AsyncDataEcharts>`、`<SdlCard>`、`<DataTags>`、`<DataTable>`，以满足团队移动端部分需求，实现代码复用；其中`<AsyncDataEcharts>`支持通过 Props 渲染多 Y 轴且支持 Y 轴复用的 Echarts 图表，支持单独配置每个数据的展示类型（折线、柱状）、最大最小值、默认选中状态、颜色；未接收到数据时会显示加载中动画，提升用户体验，用法见**快速上手**。
+
+GitHub: https://github.com/Z-404-Not-Found/a-sdl-app-component
+
+npm: https://www.npmjs.com/package/a-sdl-app-component
 
 ## 安装
 
@@ -10,6 +14,10 @@ npm install a-sdl-app-component
 // or
 
 yarn add a-sdl-app-component
+
+// or
+
+pnpm add a-sdl-app-component
 ```
 
 > 为减小打包后的大小，echarts 作为外部依赖，使用本组件库前，需要在项目中安装 echarts。
@@ -49,13 +57,15 @@ declare module "a-sdl-app-component";
 
 #### AsyncDataEcharts——异步加载 echarts
 
+封装异步 Echarts 组件，搭配 Vue 异步组件展示加载动画提升用户体验，通过 Props 渲染多 Y 轴且支持 Y 轴复用的图表，支持单独配置每个数据的展示类型（折线、柱状）、最大最小值、默认选中状态、颜色。
+
 ##### 说明
 
 | 属性           | 说明                                                                                                                                                                                                                                                                                                                  | 类型      | 是否必需                 | 默认值 |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------ | ------ |
 | echartsResData | 数据查询接口响应，格式见 echartsResData 初始值                                                                                                                                                                                                                                                                        | object[]  | 与 dataMap 二选一        | 无     |
 | nameList       | 需要显示在 echarts 中数据字段的 key 值，需包含在 echartsResData 或 dataMap 中，形如["key1","key2","key3","key4"]                                                                                                                                                                                                      | string[]  | Y                        | 无     |
-| indexList      | 控制哪些数据字段显示在同一 y 轴上，与 nameList 中的值一一对应，形如[0,1,1,2]，表示 key1 数据字段单独显示在一个 y 轴，key2,key3 一起显示在第二套 y 轴，key4 显示在第三条 y 轴，数字需逐渐递增                                                                                                                          | number[]  | Y                        | 无     |
+| indexList      | 控制哪些数据字段显示在同一 y 轴上，与 nameList 中的值一一对应，形如[0,1,1,2]，表示 key1 数据字段单独显示在一个 y 轴，key2,key3 一起显示在第二个 y 轴，key4 显示在第三个 y 轴，数字需逐渐递增                                                                                                                          | number[]  | Y                        | 无     |
 | yAxisNameList  | 各 y 轴的名字，形如['name1','name2','name2','name3']，表示 key1 所在的 y 轴名为 name1 ， key2,key3 所在的 y 轴名为 name2， key4 所在的 y 轴名为 name3，与 indexList 对应                                                                                                                                              | string[]  | Y                        | 无     |
 | selectList     | 控制数据字段是否默认选中，形如[true,true,false,true]，表示默认选中 key1、 key2、key4，key3 默认不选中 ；为空即默认全部选中                                                                                                                                                                                            | boolean[] | N                        | 无     |
 | lineList       | 控制数据字段是否为柱状图，形如[true,false,true,true]，表示 key1、 key3、key4 为折线图，key2 为柱状图 ；为空即默认全部是折线图                                                                                                                                                                                         | boolean[] | N                        | 无     |
@@ -263,9 +273,9 @@ const processResData = (echartsData, nameList) => {
 dataMap.value = processResData(echartsResData, nameList);
 ```
 
-dataMap.value 此时的值为
+dataMap.value 此时的值为，如果使用 dataMap prop 时，dataMap 示例值如下：
 
-```bash
+```js
 Map(5) {
   'key1' => [ 20, 18, 16, 14, 12, 10 ],
   'key2' => [ 30, 27, 22, -10, -3, 20 ],
@@ -281,105 +291,6 @@ Map(5) {
   ]
 }
 ```
-
-#### SdlCard——卡片
-
-##### 说明
-
-| 属性  | 说明 | 类型   | 是否必需 | 默认值 |
-| ----- | ---- | ------ | -------- | ------ |
-| title | 标题 | string | N        | ---    |
-
-| 插槽        | 说明                                                                |
-| ----------- | ------------------------------------------------------------------- |
-| content     | 卡片内容                                                            |
-| rightTag    | 卡片标题右侧默认标签，用于显示字符串（不可与 customRight 同时存在） |
-| customRight | 定制化标题右侧内容，插入用于实现特殊需求的组件                      |
-| titleIcon   | 标题右侧图标                                                        |
-
-##### 示例
-
-```vue
-<template>
-    <SdlCard title="标题">
-        <template #titleIcon>
-            <!-- 标题右侧图标 -->
-            <van-icon name="more-o" @click="showElectricityPrice = true" />
-        </template>
-        <template #rightTag>
-            <!-- 默认右侧标签显示内容 -->
-            默认标签
-        </template>
-        <template #content>
-            <!-- 卡片内容 -->
-            卡片内容
-        </template>
-    </SdlCard>
-
-    <!-- or -->
-
-    <SdlCard title="标题">
-        <template #customRight>
-            <!-- 定制化标题右侧内容，可以插入用于实现特殊需求的组件 -->
-            定制化组件
-        </template>
-        <template #content>
-            <!-- 卡片内容 -->
-            卡片内容
-        </template>
-    </SdlCard>
-</template>
-```
-
-![](http://154.8.198.192:40027/i/2025/02/27/1740662806.webp)
-
-#### DataTags——数据标签
-
-##### 说明
-
-| 属性     | 说明                                                         | 类型     | 是否必需 | 默认值                 |
-| -------- | ------------------------------------------------------------ | -------- | -------- | ---------------------- |
-| dataTags | 标签内容，需传入一个对象数组，key-value 格式，详见默认值格式 | object[] | N        | 见下方 dataTags 默认值 |
-
-```js
-// dataTags默认值
-const dataTags = [
-    {
-        key: "key1",
-        value: "value1",
-    },
-    {
-        key: "key2",
-        value: "value2",
-    },
-],
-```
-
-##### 示例
-
-```vue
-<template>
-    <SdlCard title="标题">
-        <template #content>
-            <DataTags :dataTags="dataTags"></DataTags>
-        </template>
-    </SdlCard>
-</template>
-<script setup>
-const dataTags = [
-    {
-        key: "key1",
-        value: "value1",
-    },
-    {
-        key: "key2",
-        value: "value2",
-    },
-];
-</script>
-```
-
-![](http://154.8.198.192:40027/i/2025/02/27/1740662772.webp)
 
 #### DataTable——数据表格
 
@@ -485,7 +396,7 @@ const largeCol = ["key1"];
 
 ##### 特别说明
 
-> 在实际项目中，`<DataTable>`大部分时间会和 vant 组件库中的 <van-list>一起使用以实现下拉刷新，具体实现代码如下
+> 在实际项目中，`<DataTable>`大部分时间会和 vant 组件库中的 `<van-list>`一起使用以实现下拉刷新，具体实现代码如下
 
 ```vue
 <template>
@@ -550,3 +461,104 @@ const onLoad = async () => {
 };
 </script>
 ```
+
+#### SdlCard——卡片
+
+HUESDL 团队设计的卡片组件，可定制化标题和标签右侧内容（默认为灰色 tag），支持内容插槽和标题部分右侧插槽。
+
+##### 说明
+
+| 属性  | 说明 | 类型   | 是否必需 | 默认值 |
+| ----- | ---- | ------ | -------- | ------ |
+| title | 标题 | string | N        | ---    |
+
+| 插槽        | 说明                                                                |
+| ----------- | ------------------------------------------------------------------- |
+| content     | 卡片内容                                                            |
+| rightTag    | 卡片标题右侧默认标签，用于显示字符串（不可与 customRight 同时存在） |
+| customRight | 定制化标题右侧内容，插入用于实现特殊需求的组件                      |
+| titleIcon   | 标题右侧图标                                                        |
+
+##### 示例
+
+```vue
+<template>
+    <SdlCard title="标题">
+        <template #titleIcon>
+            <!-- 标题右侧图标 -->
+            <van-icon name="more-o" @click="showElectricityPrice = true" />
+        </template>
+        <template #rightTag>
+            <!-- 默认右侧标签显示内容 -->
+            默认标签
+        </template>
+        <template #content>
+            <!-- 卡片内容 -->
+            卡片内容
+        </template>
+    </SdlCard>
+
+    <!-- or -->
+
+    <SdlCard title="标题">
+        <template #customRight>
+            <!-- 定制化标题右侧内容，可以插入用于实现特殊需求的组件 -->
+            定制化组件
+        </template>
+        <template #content>
+            <!-- 卡片内容 -->
+            卡片内容
+        </template>
+    </SdlCard>
+</template>
+```
+
+![](http://154.8.198.192:40027/i/2025/02/27/1740662806.webp)
+
+#### DataTags——数据标签
+
+##### 说明
+
+| 属性     | 说明                                                         | 类型     | 是否必需 | 默认值                 |
+| -------- | ------------------------------------------------------------ | -------- | -------- | ---------------------- |
+| dataTags | 标签内容，需传入一个对象数组，key-value 格式，详见默认值格式 | object[] | N        | 见下方 dataTags 默认值 |
+
+```js
+// dataTags默认值
+const dataTags = [
+    {
+        key: "key1",
+        value: "value1",
+    },
+    {
+        key: "key2",
+        value: "value2",
+    },
+],
+```
+
+##### 示例
+
+```vue
+<template>
+    <SdlCard title="标题">
+        <template #content>
+            <DataTags :dataTags="dataTags"></DataTags>
+        </template>
+    </SdlCard>
+</template>
+<script setup>
+const dataTags = [
+    {
+        key: "key1",
+        value: "value1",
+    },
+    {
+        key: "key2",
+        value: "value2",
+    },
+];
+</script>
+```
+
+![](http://154.8.198.192:40027/i/2025/02/27/1740662772.webp)
