@@ -74,7 +74,7 @@ defineOptions({
 }
 .tag:not(:last-child) {
     border-right-width: 1px;
-    border-color: rgb(107, 114, 128, 0.75);
+    border-color: rgb(229, 231, 235);
 }
 .tagValue {
     width: 100%;
